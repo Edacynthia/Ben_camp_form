@@ -1,0 +1,139 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #F0EBF8;
+}
+.form{
+    height: 2000px;
+    width: 600px;
+    margin: auto;
+}
+.required{
+    font-size: 15px;
+    padding: 15px 0;
+    color: #F64747;
+}
+.title-div{
+    height: 200px;
+    width: 650px;
+    background-color: white;
+    margin: 15px;
+    border-radius: 8px;
+    border-top: 8px solid #F64747;
+    padding: 25px;
+}
+
+.switch{
+    padding: 15px 0;
+}
+.name-div, .number-div, .gender-div, .pay-div, .unit-div, .allergies-div,
+ .health-div, .arrival-div, .emergency-div, .email-div{
+    height: 150px;
+    width: 650px;
+    background-color: white;
+    margin: 15px;
+    border-radius: 8px;
+}
+
+.name{
+    padding-top: 20px;
+    padding-left: 25px;
+    padding-bottom: 25px;
+    font-size: 18px;
+}
+
+.input-div{
+    padding-top: 20px;
+    padding-left: 25px;
+}
+.radio-div{
+    padding-top: 10px;
+    padding-left: 25px;
+}
+
+.input-div input{
+    width: 300px;
+    border: 0;
+    outline: 0;
+    border-bottom: 1.5px solid gainsboro;
+    font-size: 15px;
+}
+
+.btn{
+    height: 36px;
+    width: 100px;
+    border-radius: 5px;
+    border: none;
+    background-color: white;
+    margin: 8px 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+}
+a{
+    color: #F64747;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+}
+.last-div{
+    margin: 5px 35px;
+    font-size: 14px;
+}
+
+@media (min-width: 360px) and (max-width: 800px){
+    .title-div, .allergies-div, .arrival-div, .email-div, .emergency-div,
+    .gender-div, .health-div, .input-div, .name-div, .number-div, .pay-div, .unit-div{
+        width: 330px;
+    }
+    .title-div h1{
+        font-size: 26px;
+    }
+    .title-div{
+        height: 250px;
+    }
+}
+
+@media (min-width: 390px) and (max-width: 844px){
+    .title-div, .allergies-div, .arrival-div, .email-div, .emergency-div,
+    .gender-div, .health-div, .input-div, .name-div, .number-div, .pay-div, .unit-div{
+        width: 360px;
+    }
+    .title-div h1{
+        font-size: 29px;
+    }
+    .title-div{
+        height: 250px;
+    }
+}
+
+@media (min-width: 428px) and (max-width: 920px){
+    .allergies-div, .arrival-div, .email-div, .emergency-div,
+    .gender-div, .health-div, .input-div, .name-div, .number-div, .pay-div, .unit-div{
+        width: 570px;
+        height: 180px;
+    }
+    .title-div h1{
+        font-size: 40px;
+    }
+    .title-div p{
+        font-size: 20px;
+    }
+    .title-div{
+        width: 570px;
+        height: 250px;
+    }
+    .name{
+        font-size: 28px;
+    }
+    .radio-div{
+        font-size: 25px;
+    }
+    ::placeholder{
+        font-size: 20px;
+    }
+    .last-div{
+        padding: 0 30px;
+    }
+}
