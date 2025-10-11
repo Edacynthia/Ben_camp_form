@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
@@ -86,6 +87,34 @@ def registration_form(request):
                 error_message = (
                     f"Please fill in all required fields: {', '.join(missing_fields)}"
                 )
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "message": error_message})
+                messages.error(request, error_message)
+                context = {"service_units": service_units}
+                return render(request, "camp_form.html", context)
+
+            # Validate phone number format (only numbers and + character)
+            phone_pattern = r"^[\+]?[0-9]+$"
+            if not re.match(phone_pattern, form_data["phone"]):
+                error_message = "Phone number can only contain numbers (e.g., +2341234567890 or 08012345678)."
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "message": error_message})
+                messages.error(request, error_message)
+                context = {"service_units": service_units}
+                return render(request, "camp_form.html", context)
+
+            # Check for duplicate email
+            if CampRegistration.objects.filter(email=form_data["email"]).exists():
+                error_message = "This email address is already registered. Please use a different email."
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "message": error_message})
+                messages.error(request, error_message)
+                context = {"service_units": service_units}
+                return render(request, "camp_form.html", context)
+
+            # Check for duplicate phone number
+            if CampRegistration.objects.filter(phone=form_data["phone"]).exists():
+                error_message = "This phone number is already registered. Please use a different phone number."
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "message": error_message})
                 messages.error(request, error_message)
