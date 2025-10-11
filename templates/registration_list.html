@@ -62,7 +62,13 @@
                         <td>{{ registration.phone }}</td>
                         <td>{{ registration.get_gender_display }}</td>
                         <td>{{ registration.get_can_pay_display }}</td>
-                        <td>{{ registration.work_unit }}</td>
+                        <td>
+                            {% for unit in registration.work_units.all %}
+                                {{ unit.name }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                No units selected
+                            {% endfor %}
+                        </td>
                         <td>{{ registration.created_at|date:"M d, Y H:i" }}</td>
                     </tr>
                     {% endfor %}

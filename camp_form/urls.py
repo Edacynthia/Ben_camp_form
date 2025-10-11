@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path("", views.registration_form, name="registration_form"),
     path(
-        "success/<str:registration_id>/",
+        "success/<int:registration_id>/",
         views.registration_success,
         name="registration_success",
     ),

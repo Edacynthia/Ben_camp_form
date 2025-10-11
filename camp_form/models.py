@@ -2,6 +2,23 @@ from django.db import models
 import uuid
 
 
+class ServiceUnit(models.Model):
+    """Model for service units that users can select from"""
+
+    name = models.CharField(max_length=100, unique=True, verbose_name="Unit Name")
+    description = models.TextField(blank=True, verbose_name="Description")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Service Unit"
+        verbose_name_plural = "Service Units"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class CampRegistration(models.Model):
     """Model for storing BEN Camp Meeting registration data"""
 
@@ -27,7 +44,9 @@ class CampRegistration(models.Model):
     can_pay = models.CharField(
         max_length=3, choices=YES_NO_CHOICES, verbose_name="Can Pay for Camp Meeting"
     )
-    work_unit = models.CharField(max_length=255, verbose_name="Work Unit")
+    work_units = models.ManyToManyField(
+        ServiceUnit, verbose_name="Work Units", help_text="Select the units you work in"
+    )
 
     # Health Information
     allergies = models.CharField(
@@ -42,9 +61,6 @@ class CampRegistration(models.Model):
     emergency_contact = models.TextField(verbose_name="Emergency Contact Information")
 
     # System Fields
-    registration_id = models.CharField(
-        max_length=100, unique=True, editable=False, verbose_name="Registration ID"
-    )
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Registration Date"
     )
@@ -55,17 +71,5 @@ class CampRegistration(models.Model):
         verbose_name_plural = "Camp Registrations"
         ordering = ["-created_at"]
 
-    def save(self, *args, **kwargs):
-        """Generate a unique registration ID if not already set"""
-        if not self.registration_id:
-            # Generate a simple numeric ID based on timestamp and random component
-            import time
-            import random
-
-            timestamp = str(int(time.time()))[-6:]  # Last 6 digits of timestamp
-            random_num = str(random.randint(100, 999))
-            self.registration_id = f"BEN{timestamp}{random_num}"
-        super().save(*args, **kwargs)
-
     def __str__(self):
-        return f"{self.fullname} - {self.registration_id}"
+        return f"{self.fullname} - {self.pk}"

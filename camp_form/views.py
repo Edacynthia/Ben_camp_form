@@ -2,21 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
-from .models import CampRegistration
+from .models import CampRegistration, ServiceUnit
 
 
 def registration_form(request):
     """View to display the camp registration form and handle submission"""
+    # Get active service units for the form
+    service_units = ServiceUnit.objects.filter(is_active=True).order_by("name")
+
     if request.method == "POST":
         try:
             # Extract form data
+            work_unit_names = request.POST.getlist("work_unit")  # Get multiple values
             form_data = {
                 "fullname": request.POST.get("fullname", "").strip(),
                 "email": request.POST.get("email", "").strip(),
                 "phone": request.POST.get("phone", "").strip(),
                 "gender": request.POST.get("gender", ""),
                 "can_pay": request.POST.get("can_pay", ""),
-                "work_unit": request.POST.get("work_unit", "").strip(),
                 "allergies": request.POST.get("allergies", ""),
                 "health_challenges": request.POST.get("health_challenges", ""),
                 "arrival_departure": request.POST.get("arrival_departure", "").strip(),
@@ -30,7 +33,6 @@ def registration_form(request):
                 "phone",
                 "gender",
                 "can_pay",
-                "work_unit",
                 "allergies",
                 "health_challenges",
                 "arrival_departure",
@@ -41,34 +43,43 @@ def registration_form(request):
                 field for field in required_fields if not form_data[field]
             ]
 
+            # Check if at least one work unit is selected
+            if not work_unit_names:
+                missing_fields.append("work_unit")
+
             if missing_fields:
                 messages.error(
                     request,
                     f"Please fill in all required fields: {', '.join(missing_fields)}",
                 )
-                return render(request, "camp_form.html")
+                context = {"service_units": service_units}
+                return render(request, "camp_form.html", context)
 
-            # Create and save registration
+            # Create and save registration (without work_units first)
             registration = CampRegistration.objects.create(**form_data)
 
+            # Add work units using the ManyToMany relationship
+            work_units = ServiceUnit.objects.filter(name__in=work_unit_names)
+            registration.work_units.set(work_units)
+
             # Redirect to success page with registration ID
-            return redirect(
-                "registration_success", registration_id=registration.registration_id
-            )
+            return redirect("registration_success", registration_id=registration.pk)
 
         except Exception as e:
             messages.error(request, f"An error occurred during registration: {str(e)}")
-            return render(request, "camp_form.html")
+            context = {"service_units": service_units}
+            return render(request, "camp_form.html", context)
 
     # GET request - display the form
-    return render(request, "camp_form.html")
+    context = {"service_units": service_units}
+    return render(request, "camp_form.html", context)
 
 
 def registration_success(request, registration_id):
     """View to display successful registration with ID"""
     try:
         # Verify the registration exists
-        registration = CampRegistration.objects.get(registration_id=registration_id)
+        registration = CampRegistration.objects.get(pk=registration_id)
 
         context = {
             "registration_id": registration_id,

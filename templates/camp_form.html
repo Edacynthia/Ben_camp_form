@@ -5,100 +5,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BEN CAMP MEETING REGISTRATION FORM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'camp.css' %}">
 </head>
 <body>
-    <form method="post" class="form">
-        {% csrf_token %}
-        <div class="title-div">
-            <h1>BEN CAMP MEETING REGISTRATION FORM</h1>
-            <hr>
-            <p>Registration for BEN camp meeting 2024 is compulsory. Register to obtain a Registration
-                ID number.</p>
-            <hr>
-            <p class="required">* indicates required question</p>
-        </div>
-
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                        <div class="alert alert-error">
-                            {{ message }}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-success">
-                            {{ message }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
+    <div class="container">
+        <!-- Header with logo -->
+        <div class="header">
+            <div class="logo">
+                <div >
+                    <img src="{% static 'logo.svg' %}" alt="BEN Logo">
+                </div>
+                <span class="logo-text">Ben Camp Meeting Registration Form</span>
+                <span class="logo-subtitle">Registration for BEN camp meeting 2025 is compulsory. Register to obtain a Registration ID number.</span>
             </div>
-        {% endif %}
-
-        <div class="name-div">
-            <div class="name">Fullname <span class="required"> *</span></div>
-            <div class="input-div"><input type="text" name="fullname" placeholder="Your answer" required></div>
         </div>
 
-        <div class="email-div">
-            <div class="name">Email <span class="required"> *</span></div>
-            <div class="input-div"><input type="email" name="email" placeholder="Your answer" required></div>
-        </div>
+        <div class="form-card">
+           
 
-        <div class="number-div">
-            <div class="name">Phone number <span class="required"> *</span></div>
-            <div class="input-div"><input type="tel" name="phone" placeholder="Your answer" required></div>
-        </div>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <div class="alert alert-error">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-        <div class="gender-div">
-            <div class="name">Gender<span class="required"> *</span></div>
-            <div class="radio-div"><input type="radio" name="gender" value="male" required> Male</div>
-            <div class="radio-div"><input type="radio" name="gender" value="female" required> Female</div>
-        </div>
+            <form method="post" class="registration-form">
+                {% csrf_token %}
 
-        <div class="pay-div">
-            <div class="name">Will you be able to pay for the camp meeting?<span class="required"> *
-            </span></div>
-            <div class="radio-div"><input type="radio" name="can_pay" value="yes" required> Yes</div>
-            <div class="radio-div"><input type="radio" name="can_pay" value="no" required> No</div>
-        </div>
+                <div class="form-group">
+                    <label for="fullname">Fullname*</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="e.g. Sandra Oasis Michelle" required>
+                </div>
 
-        <div class="unit-div">
-            <div class="name">What unit do you work in? <span class="required"> *</span></div>
-            <div class="input-div"><input type="text" name="work_unit" placeholder="Your answer" required></div>
-        </div>
+                <div class="form-group">
+                    <label for="email">Email*</label>
+                    <input type="email" id="email" name="email" placeholder="e.g. xyz@gmail.com" required>
+                </div>
 
-        <div class="allergies-div">
-            <div class="name">Do you have any allergies?<span class="required"> *</span></div>
-            <div class="radio-div"><input type="radio" name="allergies" value="yes" required> Yes</div>
-            <div class="radio-div"><input type="radio" name="allergies" value="no" required> No</div>
-        </div>
+                <div class="form-group">
+                    <label for="phone">Phone number*</label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g. +234XXX" required>
+                </div>
 
-        <div class="health-div">
-            <div class="name">Do you have any health challenges<span class="required"> *</span></div>
-            <div class="radio-div"><input type="radio" name="health_challenges" value="yes" required> Yes</div>
-            <div class="radio-div"><input type="radio" name="health_challenges" value="no" required> No</div>
-        </div>
+                <div class="form-group">
+                    <label>Gender*</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="male" required>
+                            <span class="radio-mark"></span>
+                            Male
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="female" required>
+                            <span class="radio-mark"></span>
+                            Female
+                        </label>
+                    </div>
+                </div>
 
-        <div class="arrival-div">
-            <div class="name">Arrival and Departure Plan<span class="required"> *</span></div>
-            <div class="input-div"><input type="text" name="arrival_departure" placeholder="Your answer" required></div>
-        </div>
+                <div class="form-group">
+                    <label>Will you be able to pay for the camp meeting?*</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="can_pay" value="yes" required>
+                            <span class="radio-mark"></span>
+                            Yes
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="can_pay" value="no" required>
+                            <span class="radio-mark"></span>
+                            No
+                        </label>
+                    </div>
+                </div>
 
-        <div class="emergency-div">
-            <div class="name">Emergency contact info<span class="required"> *</span></div>
-            <div class="input-div"><input type="text" name="emergency_contact" placeholder="Your answer" required></div>
-        </div>
+                <div class="form-group">
+                    <label>What unit do you work in?*</label>
+                    <div class="checkbox-grid">
+                        {% for unit in service_units %}
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="work_unit" value="{{ unit.name }}" id="unit_{{ unit.id }}">
+                                <span class="checkbox-mark"></span>
+                                {{ unit.name }}
+                            </label>
+                        {% empty %}
+                            <p>No service units available. Please contact administrator.</p>
+                        {% endfor %}
+                    </div>
+                </div>
 
-        <div>
-            <button class="btn" type="submit">Submit</button>
-        </div>
+                <div class="form-group">
+                    <label>Do you have any allergies?*</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="allergies" value="yes" required>
+                            <span class="radio-mark"></span>
+                            Yes
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="allergies" value="no" required>
+                            <span class="radio-mark"></span>
+                            No
+                        </label>
+                    </div>
+                </div>
 
-        <div class="last-div">
-            <p>Believers Equipping Network: Raising godly seeds</p>
+                <div class="form-group">
+                    <label>Do you have any health challenges*</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="health_challenges" value="yes" required>
+                            <span class="radio-mark"></span>
+                            Yes
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="health_challenges" value="no" required>
+                            <span class="radio-mark"></span>
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="arrival_departure">Arrival and Departure Plan*</label>
+                    <textarea id="arrival_departure" name="arrival_departure" placeholder="Your answer" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergency_contact">Emergency contact info*</label>
+                    <textarea id="emergency_contact" name="emergency_contact" placeholder="Your answer" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
         </div>
-    </form>
-    
-    
+    </div>
 </body>
+</html>
 </html>
