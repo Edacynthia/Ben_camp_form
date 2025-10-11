@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camp Registrations List</title>
+    <link rel="stylesheet" href="{% static 'camp.css' %}">
+    <style>
+        .registration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .registration-table th,
+        .registration-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .registration-table th {
+            background-color: #f2f2f2;
+        }
+        .stats {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <div class="title-div">
+            <h1>BEN CAMP MEETING REGISTRATIONS</h1>
+            <hr>
+            <div class="stats">
+                <p><strong>Total Registrations:</strong> {{ total_count }}</p>
+            </div>
+        </div>
+
+        {% if registrations %}
+            <table class="registration-table">
+                <thead>
+                    <tr>
+                        <th>Registration ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Can Pay</th>
+                        <th>Work Unit</th>
+                        <th>Registration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                    <tr>
+                        <td>{{ registration.registration_id }}</td>
+                        <td>{{ registration.fullname }}</td>
+                        <td>{{ registration.email }}</td>
+                        <td>{{ registration.phone }}</td>
+                        <td>{{ registration.get_gender_display }}</td>
+                        <td>{{ registration.get_can_pay_display }}</td>
+                        <td>{{ registration.work_unit }}</td>
+                        <td>{{ registration.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No registrations found.</p>
+        {% endif %}
+
+        <div style="margin: 20px 0;">
+            <a href="{% url 'registration_form' %}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Back to Registration Form</a>
+        </div>
+
+        <div class="last-div">
+            <p>Believers Equipping Network: Raising godly seeds</p>
+        </div>
+    </div>
+</body>
+</html>

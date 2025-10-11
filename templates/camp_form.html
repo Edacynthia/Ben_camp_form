@@ -19,6 +19,22 @@
             <p class="required">* indicates required question</p>
         </div>
 
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-error">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <div class="name-div">
             <div class="name">Fullname <span class="required"> *</span></div>
             <div class="input-div"><input type="text" name="fullname" placeholder="Your answer" required></div>
