@@ -209,6 +209,16 @@
     </div>
 
     <script>
+        // Style asterisks in labels to be red
+        document.addEventListener('DOMContentLoaded', function() {
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                if (label.textContent.includes('*')) {
+                    label.innerHTML = label.innerHTML.replace(/\*/g, '<span style="color: #ff3333; font-weight: bold;">*</span>');
+                }
+            });
+        });
+
         // Handle allergies conditional field
         const allergiesYes = document.getElementById('allergies_yes');
         const allergiesNo = document.getElementById('allergies_no');
