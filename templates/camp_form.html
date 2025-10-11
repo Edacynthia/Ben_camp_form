@@ -169,6 +169,45 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="success-icon">
+                   <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="60" height="60" rx="30" fill="#FF3333" fill-opacity="0.05"/>
+<rect x="0.5" y="0.5" width="59" height="59" rx="29.5" stroke="#FF3333" stroke-opacity="0.2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M42.4907 15.2219C42.86 14.9997 43.301 14.9293 43.7212 15.0253C44.1413 15.1213 44.5079 15.3764 44.744 15.7369L46.394 18.2536C46.6091 18.5823 46.7012 18.9765 46.6539 19.3665C46.6066 19.7566 46.4231 20.1173 46.1357 20.3852L46.1307 20.3919L46.1074 20.4136L46.0124 20.5019L45.6374 20.8602C43.5624 22.8729 41.5503 24.9494 39.604 27.0869C35.9424 31.1136 31.594 36.3836 28.6674 41.4969C27.8507 42.9236 25.8557 43.2302 24.6724 41.9986L13.864 30.7686C13.7092 30.6076 13.5882 30.4171 13.5084 30.2084C13.4286 29.9997 13.3916 29.7771 13.3995 29.5539C13.4074 29.3306 13.4602 29.1112 13.5546 28.9087C13.649 28.7063 13.7831 28.5248 13.949 28.3752L17.2157 25.4286C17.5028 25.1697 17.8709 25.0187 18.257 25.0014C18.6431 24.9841 19.0233 25.1015 19.3324 25.3336L24.8474 29.4686C33.4624 20.9736 38.3474 17.7136 42.4907 15.2219ZM42.8407 18.9152C39.024 21.3019 34.2607 24.7636 26.1774 32.8452C25.8937 33.1289 25.5173 33.3007 25.1171 33.3292C24.717 33.3577 24.32 33.2409 23.999 33.0002L18.429 28.8236L17.4607 29.6969L26.3224 38.9069C29.399 33.7902 33.634 28.6969 37.139 24.8436C38.9847 22.816 40.8883 20.8418 42.8474 18.9236L42.8407 18.9152Z" fill="#FF3333"/>
+</svg>
+
+                </div>
+                <h2 class="success-text">Registration Successful!</h2>
+            </div>
+            <div class="modal-body">
+                <div class="registration-id-container">
+                    <p class="registration-label">Your Registration ID</p>
+                    <div class="registration-id" id="registrationId"></div>
+                    <button class="copy-btn" onclick="copyRegistrationId()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-message">Please save this Registration ID for your records. Once you leave this page you won't be able to get it back.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Submitting registration...</p>
+    </div>
+
     <script>
         // Handle allergies conditional field
         const allergiesYes = document.getElementById('allergies_yes');
@@ -209,6 +248,101 @@
                 healthDetails.classList.remove('show');
                 healthDetailsInput.required = false;
                 healthDetailsInput.value = '';
+            }
+        });
+
+        // Handle form submission via AJAX
+        const form = document.querySelector('.registration-form');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const successModal = document.getElementById('successModal');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading overlay
+            loadingOverlay.style.display = 'flex';
+            
+            // Prepare form data
+            const formData = new FormData(form);
+            
+            // Submit via AJAX
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading overlay
+                loadingOverlay.style.display = 'none';
+                
+                if (data.success) {
+                    // Show success modal with registration ID
+                    document.getElementById('registrationId').textContent = data.registration_id;
+                    successModal.style.display = 'flex';
+                } else {
+                    // Show error message
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                // Hide loading overlay
+                loadingOverlay.style.display = 'none';
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+
+        // Modal functions
+        function closeModal() {
+            successModal.style.display = 'none';
+            resetForm();
+        }
+
+        function resetForm() {
+            form.reset();
+            // Reset conditional fields
+            allergiesDetails.classList.remove('show');
+            healthDetails.classList.remove('show');
+            allergyDetailsInput.required = false;
+            healthDetailsInput.required = false;
+            
+            // Clear any existing messages
+            const messages = document.querySelector('.messages');
+            if (messages) {
+                messages.remove();
+            }
+        }
+
+        function copyRegistrationId() {
+            const registrationId = document.getElementById('registrationId').textContent;
+            navigator.clipboard.writeText(registrationId).then(function() {
+                // Show temporary feedback
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalHTML = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<span style="color: #10b981;">✓</span>';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        // Close modal when clicking outside
+        successModal.addEventListener('click', function(e) {
+            if (e.target === successModal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && successModal.style.display === 'flex') {
+                closeModal();
             }
         });
     </script>

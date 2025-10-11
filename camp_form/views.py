@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import CampRegistration, ServiceUnit
 
@@ -31,6 +31,13 @@ def registration_form(request):
             if form_data["allergies"] == "yes":
                 allergy_details = request.POST.get("allergy_details", "").strip()
                 if not allergy_details:
+                    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                        return JsonResponse(
+                            {
+                                "success": False,
+                                "message": "Please specify your allergies.",
+                            }
+                        )
                     messages.error(request, "Please specify your allergies.")
                     context = {"service_units": service_units}
                     return render(request, "camp_form.html", context)
@@ -41,6 +48,13 @@ def registration_form(request):
                     "health_challenge_details", ""
                 ).strip()
                 if not health_details:
+                    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                        return JsonResponse(
+                            {
+                                "success": False,
+                                "message": "Please specify your health challenges.",
+                            }
+                        )
                     messages.error(request, "Please specify your health challenges.")
                     context = {"service_units": service_units}
                     return render(request, "camp_form.html", context)
@@ -69,10 +83,12 @@ def registration_form(request):
                 missing_fields.append("work_unit")
 
             if missing_fields:
-                messages.error(
-                    request,
-                    f"Please fill in all required fields: {', '.join(missing_fields)}",
+                error_message = (
+                    f"Please fill in all required fields: {', '.join(missing_fields)}"
                 )
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "message": error_message})
+                messages.error(request, error_message)
                 context = {"service_units": service_units}
                 return render(request, "camp_form.html", context)
 
@@ -83,10 +99,29 @@ def registration_form(request):
             work_units = ServiceUnit.objects.filter(name__in=work_unit_names)
             registration.work_units.set(work_units)
 
-            # Redirect to success page with registration ID
+            # Check if this is an AJAX request
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "registration_id": registration.pk,
+                        "message": "Registration successful!",
+                    }
+                )
+
+            # Regular form submission - redirect to success page
             return redirect("registration_success", registration_id=registration.pk)
 
         except Exception as e:
+            # Check if this is an AJAX request
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": f"An error occurred during registration: {str(e)}",
+                    }
+                )
+
             messages.error(request, f"An error occurred during registration: {str(e)}")
             context = {"service_units": service_units}
             return render(request, "camp_form.html", context)
