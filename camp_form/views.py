@@ -22,9 +22,29 @@ def registration_form(request):
                 "can_pay": request.POST.get("can_pay", ""),
                 "allergies": request.POST.get("allergies", ""),
                 "health_challenges": request.POST.get("health_challenges", ""),
+                "location": request.POST.get("location", "").strip(),
                 "arrival_departure": request.POST.get("arrival_departure", "").strip(),
                 "emergency_contact": request.POST.get("emergency_contact", "").strip(),
             }
+
+            # Handle conditional fields
+            if form_data["allergies"] == "yes":
+                allergy_details = request.POST.get("allergy_details", "").strip()
+                if not allergy_details:
+                    messages.error(request, "Please specify your allergies.")
+                    context = {"service_units": service_units}
+                    return render(request, "camp_form.html", context)
+                form_data["allergy_details"] = allergy_details
+
+            if form_data["health_challenges"] == "yes":
+                health_details = request.POST.get(
+                    "health_challenge_details", ""
+                ).strip()
+                if not health_details:
+                    messages.error(request, "Please specify your health challenges.")
+                    context = {"service_units": service_units}
+                    return render(request, "camp_form.html", context)
+                form_data["health_challenge_details"] = health_details
 
             # Basic validation
             required_fields = [
@@ -35,6 +55,7 @@ def registration_form(request):
                 "can_pay",
                 "allergies",
                 "health_challenges",
+                "location",
                 "arrival_departure",
                 "emergency_contact",
             ]

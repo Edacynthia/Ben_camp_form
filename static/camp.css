@@ -97,19 +97,51 @@ body {
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     background-color: #F3F3F3;
     border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+/* Conditional form groups animation */
+.form-group.conditional {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+}
+
+.form-group.conditional.show {
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: 20px;
+    transform: translateY(0);
+}
+
+/* Radio button and checkbox form groups have white background */
+.form-group:has(.radio-group),
+.form-group:has(.checkbox-grid) {
+    background-color: white;
 }
 
 .form-group label {
     display: block;
-    font-weight: 600;
+    font-weight: 500;
     color: #303030;
     font-size: 14px;
     padding: 12px 16px 0;
     background-color: #F3F3F3;
     border-radius: 20px 20px 0 0;
+}
+
+/* Radio group and checkbox group labels have white background */
+.form-group:has(.radio-group) label,
+.form-group:has(.checkbox-grid) label {
+    background-color: white;
+    border-radius: 20px 20px 20px 20px;
+    padding: 3px 10px;
 }
 
 /* Input Fields */
@@ -139,10 +171,12 @@ body {
 
 /* Radio Groups */
 .radio-group {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  
+  background-color: transparent; /* keep parent background from creating weird rounding */
 }
 
 .radio-item {
@@ -150,30 +184,36 @@ body {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    font-weight: 400;
-    font-size: 16px;
-    color: #2c3e50;
+    font-weight: 500;
+    font-size: 14px;
+    color: #272727;
+    border: 1px solid #E4E4E4;
+    transition: border-color 0.2s ease;
+}
+
+.radio-item:hover {
+    border-color: #bdc3c7;
 }
 
 .radio-item input[type="radio"] {
     appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #bdc3c7;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #636363;
     border-radius: 50%;
     position: relative;
     margin: 0;
 }
 
 .radio-item input[type="radio"]:checked {
-    border-color: #3498db;
+    border-color: #FF3333;
 }
 
 .radio-item input[type="radio"]:checked::after {
     content: '';
-    width: 10px;
-    height: 10px;
-    background-color: #3498db;
+    width: 6px;
+    height: 6px;
+    background-color: #FF3333;
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -184,8 +224,10 @@ body {
 /* Checkbox Grid */
 .checkbox-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    background-color: white;
+    border-radius: 0 0 20px 20px;
 }
 
 .checkbox-item {
@@ -193,31 +235,34 @@ body {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
-    color: #2c3e50;
-    padding: 8px;
+    color: #272727;
+    
+    border: 1px solid #E4E4E4;
     border-radius: 6px;
+    background-color: white;
     transition: background-color 0.2s ease;
 }
 
 .checkbox-item:hover {
-    background-color: #f8f9fa;
+    background-color: white;
 }
 
 .checkbox-item input[type="checkbox"] {
     appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #bdc3c7;
-    border-radius: 4px;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #636363;
+    border-radius: 50%;
     position: relative;
     margin: 0;
+    background-color: white;
 }
 
 .checkbox-item input[type="checkbox"]:checked {
-    border-color: #3498db;
-    background-color: #3498db;
+    border-color: #FF3333;
+    background-color: #FF3333;
 }
 
 .checkbox-item input[type="checkbox"]:checked::after {
@@ -234,13 +279,13 @@ body {
 /* Submit Button */
 .submit-btn {
     width: 100%;
-    background: linear-gradient(135deg, #ff4757, #ff3742);
+    background-color: #FF3333;
     color: white;
     border: none;
-    padding: 16px 24px;
-    border-radius: 8px;
+    padding: 14px 0px;
+    border-radius: 20px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     margin-top: 20px;
@@ -297,6 +342,7 @@ body {
     .radio-group {
         flex-direction: column;
         gap: 10px;
+        align-items: flex-start;
     }
     
     .checkbox-grid {

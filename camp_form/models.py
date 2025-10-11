@@ -52,11 +52,18 @@ class CampRegistration(models.Model):
     allergies = models.CharField(
         max_length=3, choices=YES_NO_CHOICES, verbose_name="Has Allergies"
     )
+    allergy_details = models.TextField(
+        blank=True, null=True, verbose_name="Allergy Details"
+    )
     health_challenges = models.CharField(
         max_length=3, choices=YES_NO_CHOICES, verbose_name="Has Health Challenges"
     )
+    health_challenge_details = models.TextField(
+        blank=True, null=True, verbose_name="Health Challenge Details"
+    )
 
     # Travel and Emergency
+    location = models.CharField(max_length=255, verbose_name="Location Coming From")
     arrival_departure = models.TextField(verbose_name="Arrival and Departure Plan")
     emergency_contact = models.TextField(verbose_name="Emergency Contact Information")
 

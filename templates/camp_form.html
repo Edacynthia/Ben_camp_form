@@ -111,32 +111,47 @@
                     <label>Do you have any allergies?*</label>
                     <div class="radio-group">
                         <label class="radio-item">
-                            <input type="radio" name="allergies" value="yes" required>
+                            <input type="radio" name="allergies" value="yes" id="allergies_yes" required>
                             <span class="radio-mark"></span>
                             Yes
                         </label>
                         <label class="radio-item">
-                            <input type="radio" name="allergies" value="no" required>
+                            <input type="radio" name="allergies" value="no" id="allergies_no" required>
                             <span class="radio-mark"></span>
                             No
                         </label>
                     </div>
                 </div>
 
+                <div class="form-group conditional" id="allergies_details">
+                    <label for="allergy_details">Please specify your allergies*</label>
+                    <textarea id="allergy_details" name="allergy_details" placeholder="Please describe your allergies"></textarea>
+                </div>
+
                 <div class="form-group">
                     <label>Do you have any health challenges*</label>
                     <div class="radio-group">
                         <label class="radio-item">
-                            <input type="radio" name="health_challenges" value="yes" required>
+                            <input type="radio" name="health_challenges" value="yes" id="health_yes" required>
                             <span class="radio-mark"></span>
                             Yes
                         </label>
                         <label class="radio-item">
-                            <input type="radio" name="health_challenges" value="no" required>
+                            <input type="radio" name="health_challenges" value="no" id="health_no" required>
                             <span class="radio-mark"></span>
                             No
                         </label>
                     </div>
+                </div>
+
+                <div class="form-group conditional" id="health_details">
+                    <label for="health_challenge_details">Please specify your health challenges*</label>
+                    <textarea id="health_challenge_details" name="health_challenge_details" placeholder="Please describe your health challenges"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">What location are you coming from?*</label>
+                    <input type="text" id="location" name="location" placeholder="e.g. Lagos, Nigeria" required>
                 </div>
 
                 <div class="form-group">
@@ -153,6 +168,50 @@
             </form>
         </div>
     </div>
+
+    <script>
+        // Handle allergies conditional field
+        const allergiesYes = document.getElementById('allergies_yes');
+        const allergiesNo = document.getElementById('allergies_no');
+        const allergiesDetails = document.getElementById('allergies_details');
+        const allergyDetailsInput = document.getElementById('allergy_details');
+
+        allergiesYes.addEventListener('change', function() {
+            if (this.checked) {
+                allergiesDetails.classList.add('show');
+                allergyDetailsInput.required = true;
+            }
+        });
+
+        allergiesNo.addEventListener('change', function() {
+            if (this.checked) {
+                allergiesDetails.classList.remove('show');
+                allergyDetailsInput.required = false;
+                allergyDetailsInput.value = '';
+            }
+        });
+
+        // Handle health challenges conditional field
+        const healthYes = document.getElementById('health_yes');
+        const healthNo = document.getElementById('health_no');
+        const healthDetails = document.getElementById('health_details');
+        const healthDetailsInput = document.getElementById('health_challenge_details');
+
+        healthYes.addEventListener('change', function() {
+            if (this.checked) {
+                healthDetails.classList.add('show');
+                healthDetailsInput.required = true;
+            }
+        });
+
+        healthNo.addEventListener('change', function() {
+            if (this.checked) {
+                healthDetails.classList.remove('show');
+                healthDetailsInput.required = false;
+                healthDetailsInput.value = '';
+            }
+        });
+    </script>
 </body>
 </html>
 </html>
